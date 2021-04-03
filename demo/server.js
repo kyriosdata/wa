@@ -1,3 +1,7 @@
+/**
+ * Servidor de páginas estático.
+ */
+
 const express = require("express");
 const app = express();
 

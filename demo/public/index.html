@@ -7,12 +7,18 @@
     <body>
         <h1>Aprendendo WebAssembly</h1>
         <script>
+            const strLog = (offset, length) => {
+                const buffer = wasm.instance.exports.memory.buffer;
+                const strBuffer = new Uint8Array(buffer, offset, length);
+                const str = new TextDecoder().decode(strBuffer);
+                console.log(str);
+            }
+
             // Objeto que indica funções em JavaScript
             // chamadas por código em C.
             const imports = {
                 env : {
-                    numLog: console.log,
-                    strLog: console.log,
+                    strLog
                 }
             };
 
@@ -21,7 +27,7 @@
             .then(wasm => {
                 console.log('WASM pronto...');
                 window.wasm = wasm;
-                wasm.instance.exports.concatena("linha 1", "linha 2");
+                wasm.instance.exports.exibeMensagem("Testando...");
             });
         </script>
     </body>
