@@ -8,11 +8,17 @@
         <h1>Aprendendo WebAssembly</h1>
         <script>
             const strLog = (offset, length) => {
+                console.log(offset, length);
                 const buffer = wasm.instance.exports.memory.buffer;
                 const strBuffer = new Uint8Array(buffer, offset, length);
                 const str = new TextDecoder().decode(strBuffer);
-                console.log(str);
+                
+                window.dispatchEvent(new CustomEvent("wasmValue", { detail: str}));
             }
+
+            window.addEventListener("wasmValue", str => {
+                console.log("Received:", str.detail);
+            })
 
             // Objeto que indica funções em JavaScript
             // chamadas por código em C.
@@ -27,7 +33,6 @@
             .then(wasm => {
                 console.log('WASM pronto...');
                 window.wasm = wasm;
-                wasm.instance.exports.exibeMensagem("Testando...");
             });
         </script>
     </body>
