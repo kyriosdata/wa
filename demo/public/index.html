@@ -7,12 +7,21 @@
     <body>
         <h1>Aprendendo WebAssembly</h1>
         <script>
+            // Objeto que indica funções em JavaScript
+            // chamadas por código em C.
+            const imports = {
+                env : {
+                    numLog: console.log,
+                    strLog: console.log,
+                }
+            };
+
             // Compila e inicia o módulo WebAssembly
-            WebAssembly.instantiateStreaming(fetch('/program.wasm'))
+            WebAssembly.instantiateStreaming(fetch('/program.wasm'), imports)
             .then(wasm => {
                 console.log('WASM pronto...');
                 window.wasm = wasm;
-                console.log(wasm.instance.exports.soma(1,3));
+                wasm.instance.exports.concatena("linha 1", "linha 2");
             });
         </script>
     </body>
