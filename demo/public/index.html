@@ -7,32 +7,48 @@
     <body>
         <h1>Aprendendo WebAssembly</h1>
         <script>
-            const strLog = (offset, length) => {
-                console.log(offset, length);
+            // Carrega string da memória empregada pelo WebAssembly
+            const readStrFromMem = (offset, length) => {
                 const buffer = wasm.instance.exports.memory.buffer;
                 const strBuffer = new Uint8Array(buffer, offset, length);
                 const str = new TextDecoder().decode(strBuffer);
                 
-                window.dispatchEvent(new CustomEvent("wasmValue", { detail: str}));
+                const objeto = { detail: str };
+                window.dispatchEvent(new CustomEvent("wasmValue", objeto));
             }
 
-            window.addEventListener("wasmValue", str => {
-                console.log("Received:", str.detail);
+            window.addEventListener("wasmValue", objeto => {
+                console.log("Received:", objeto.detail);
             })
 
-            // Objeto que indica funções em JavaScript
-            // chamadas por código em C.
+            // Objeto que indica funções implementadas em JavaScript
+            // chamadas por código em C. O objeto abaixo disponibiliza
+            // para código em C a função 'log'.
             const imports = {
                 env : {
-                    strLog
+                    log : console.log
                 }
             };
 
-            // Compila e inicia o módulo WebAssembly
-            WebAssembly.instantiateStreaming(fetch('/program.wasm'), imports)
+            // Carrega o módulo WASM
+            const moduloWasm = fetch('/program.wasm');
+            
+            // Compila, inicia e disponibiliza o WASM
+            WebAssembly.instantiateStreaming(moduloWasm, imports)
             .then(wasm => {
-                console.log('WASM pronto...');
+                // Disponibiliza WebAssembly Module (WASM)
                 window.wasm = wasm;
+
+                console.log('WASM pronto...');  
+
+                // WASM: o que o módulo exporta para uso em JavaScript
+                console.log('exports', WebAssembly.Module.exports(wasm.module));              
+
+                // WASM: o que o módulo importa para seu próprio uso.
+                console.log('imports', WebAssembly.Module.imports(wasm.module));
+            }).catch(erro => {
+                console.log("Erro ao carregar WASM");
+                console.log(erro.toString());
             });
         </script>
     </body>

@@ -10,7 +10,39 @@ Neste processo é necessário criar tais módulos a partir de lingagens como Rus
 - Chrome
 - node (e npm)
 - [WasmFiddle](https://wasdk.github.io/WasmFiddle/)
+- [Linguagem C](https://www.programiz.com/c-programming)
 
 ## Alguns links
 
 - [WebAssembly.instantiateStreaming()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/instantiateStreaming)
+
+## WebAssembly a partir de código em C
+
+- Todas as funções no código em C compilado em WASM tornam-se
+  disponíveis para uso via código em JavaScript. Este código em C
+  pode fazer uso de funções da biblioteca básica de C. São os
+  _exports_.
+
+- Função importada deve ser declarada no código em C, por exemplo,
+  `void log(char* str)` para função que recebe uma sequência de
+  caracteres como argumento. O código em C chamará esta função como
+  `log("casa")`, por exemplo. Além da declaração no código em C é
+  necessário passar um objeto, segundo argumento, ao método
+  `instantiateStreaming`. Desta forma, ao contrário do caso anterior,
+  nem toda função em JavaScript estará disponível ao módulo, mas apenas aquelas explicitamente indicadas pelo segundo argumento. Abaixo segue como definir um objeto para este segundo argumento, no
+  qual indica que o módulo em questão fará usa função `log` cuja
+  implementação em JavaScript é `console.log`.
+
+```js
+const imports = {
+  env: {
+    log: console.log,
+  },
+};
+```
+
+- Função importada que passa uma sequência de caracteres
+
+- Funções que recebem como argumento ou retornam apontadores
+  precisam de tratamento específico em C. Por enquanto, ocorre erro,
+  ou seja, não consigo passar dados como uma string.
