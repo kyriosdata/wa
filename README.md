@@ -4,6 +4,10 @@ WebAssembly permite escrever módulos "rápidos", ou WASM, para ser executado em
 
 Neste processo é necessário criar tais módulos a partir de lingagens como Rust, C, C++ ou Kotlin, por exemplo, e permitir que código em um módulo em WebAssemly possa interagir com código em JavaScrit.
 
+A interação entre código escrito em JavaScript e C é facilitada por
+ferramentas como [emscripten](https://emscripten.org/) que oferece
+vários recursos tanto para o código em JavaScript quanto para o código em C.
+
 ## Pré-requisitos
 
 - Editor (por exemplo, VS Code)
