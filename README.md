@@ -41,6 +41,11 @@ const imports = {
 };
 ```
 
+- Como uma sequência de caracteres é passada de C para JavaScript?
+  Por meio de um apontador (um deslocamento em uma memória, ou _offset_). Desta forma, ao usar a função acima será exibido este
+  deslocamento, em vez da sequência propriamente dita. Para recuperar
+  os dados é necessário acesso à memória do WASM.
+
 - Função importada que passa uma sequência de caracteres
 
 - Funções que recebem como argumento ou retornam apontadores

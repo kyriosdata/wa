@@ -7,27 +7,51 @@
     <body>
         <h1>Aprendendo WebAssembly</h1>
         <script>
+            // Criar a memória a ser empregada pelo WASM
+            // (definida em número de páginas de 64KB)
+            const wasmMemory = new WebAssembly.Memory({initial: 2});
+
+            const EVENTO = "notificaEvento";
+
             // Carrega string da memória empregada pelo WebAssembly
             const readStrFromMem = (offset, length) => {
                 const buffer = wasm.instance.exports.memory.buffer;
+
+                // Alternativa abaixo exige alteração no código WAT
+                // const buffer = wasmMemory.buffer;
+
                 const strBuffer = new Uint8Array(buffer, offset, length);
-                const str = new TextDecoder().decode(strBuffer);
-                
-                const objeto = { detail: str };
-                window.dispatchEvent(new CustomEvent("wasmValue", objeto));
+                return new TextDecoder().decode(strBuffer);
             }
 
-            window.addEventListener("wasmValue", objeto => {
+            /**
+             * Código definido abaixo recebe a posição de memória
+             * a partir da qual, no WASM memory, a quantidade length
+             * de bytes correspondente à sequência de caracteres
+             * disponibilizada para uso está disponível.
+             * 
+             * A resposta, uma string lida da memória, dá origem
+             * a um evento que, ao ser recebido, recebe o 
+             * tratamento desejado.
+             */
+            const resposta = (offset, length) => {
+                const objeto = { detail: readStrFromMem(offset, length) };
+                window.dispatchEvent(new CustomEvent(EVENTO, objeto));                
+            }
+
+            // Trata evento correspondente à resposta.
+            window.addEventListener(EVENTO, objeto => {
                 console.log("Received:", objeto.detail);
             })
 
             // Objeto que indica funções implementadas em JavaScript
             // chamadas por código em C. O objeto abaixo disponibiliza
-            // para código em C a função 'log'.
+            // para código em C a função 'notifica'.
             const imports = {
                 env : {
-                    log : console.log
-                }
+                    notifica : resposta,
+                    memory: wasmMemory,
+                },
             };
 
             // Carrega o módulo WASM
