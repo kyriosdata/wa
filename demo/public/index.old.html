@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <title>Aprenda WA</title>
+    </head>
+    <body>
+        <h1>Aprendendo WebAssembly</h1>
+        <script>
+            // Criar a memória a ser empregada pelo WASM
+            // (definida em número de páginas de 64KB)
+            const wasmMemory = new WebAssembly.Memory({initial: 2});
+
+            const EVENTO = "notificaEvento";
+
+            // Carrega string da memória empregada pelo WebAssembly
+            const readStrFromMem = (offset, length) => {
+                const buffer = wasm.instance.exports.memory.buffer;
+
+                // Alternativa abaixo exige alteração no código WAT
+                // const buffer = wasmMemory.buffer;
+
+                const strBuffer = new Uint8Array(buffer, offset, length);
+                return new TextDecoder().decode(strBuffer);
+            }
+
+            /**
+             * Código definido abaixo recebe a posição de memória
+             * a partir da qual, no WASM memory, a quantidade length
+             * de bytes correspondente à sequência de caracteres
+             * disponibilizada para uso está disponível.
+             * 
+             * A resposta, uma string lida da memória, dá origem
+             * a um evento que, ao ser recebido, recebe o 
+             * tratamento desejado.
+             */
+            const resposta = (offset, length) => {
+                const objeto = { detail: readStrFromMem(offset, length) };
+                window.dispatchEvent(new CustomEvent(EVENTO, objeto));                
+            }
+
+            // Trata evento correspondente à resposta.
+            window.addEventListener(EVENTO, objeto => {
+                console.log("Received:", objeto.detail);
+            })
+
+            // Objeto que indica funções implementadas em JavaScript
+            // chamadas por código em C. O objeto abaixo disponibiliza
+            // para código em C a função 'notifica'.
+            const imports = {
+                env : {
+                    notifica : resposta,
+                    memory: wasmMemory,
+                },
+            };
+
+            // Carrega o módulo WASM
+            const moduloWasm = fetch('/program.wasm');
+            
+            // Compila, inicia e disponibiliza o WASM
+            WebAssembly.instantiateStreaming(moduloWasm, imports)
+            .then(wasm => {
+                // Disponibiliza WebAssembly Module (WASM)
+                window.wasm = wasm;
+
+                console.log('WASM pronto...');  
+
+                // WASM: o que o módulo exporta para uso em JavaScript
+                console.log('exports', WebAssembly.Module.exports(wasm.module));              
+
+                // WASM: o que o módulo importa para seu próprio uso.
+                console.log('imports', WebAssembly.Module.imports(wasm.module));
+            }).catch(erro => {
+                console.log("Erro ao carregar WASM");
+                console.log(erro.toString());
+            });
+        </script>
+    </body>
+</html>
