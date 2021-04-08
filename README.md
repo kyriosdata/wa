@@ -16,6 +16,10 @@ vários recursos tanto para o código em JavaScript quanto para o código em C.
 - [WasmFiddle](https://wasdk.github.io/WasmFiddle/)
 - [Linguagem C](https://www.programiz.com/c-programming)
 
+## Promt
+
+- Prepare o prompt (windows): `emsdk_env.bat`
+
 ## Alguns links
 
 - [WebAssembly.instantiateStreaming()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/instantiateStreaming)
