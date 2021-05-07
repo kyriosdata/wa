@@ -30,6 +30,7 @@ vários recursos tanto para o código em JavaScript quanto para o código em C.
 - `emcc lib/demo.c -s WASM=1 -O3 -o demo.js`
 - `emcc lib/demo.c -s WASM=1 -O3 --pre-js antes.js -o demo.js`
 - `emcc lib/demo.c -s WASM=1 -O3 --post-js apos.js -o demo.js`
+- `emcc lib/demo.c -s WASM=1 -s EXPORTED_FUNCTIONS="['_numero', '_main']" -O3 --post-js apos.js -o public\demo.js`
 
 ## Promt
 
