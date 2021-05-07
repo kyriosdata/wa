@@ -11,14 +11,29 @@ vários recursos tanto para o código em JavaScript quanto para o código em C.
 ## Pré-requisitos
 
 - Editor (por exemplo, VS Code)
+  - [WasmFiddle](https://wasdk.github.io/WasmFiddle/)
+  - [Linguagem C](https://www.programiz.com/c-programming)
 - Chrome
 - node (e npm)
-- [WasmFiddle](https://wasdk.github.io/WasmFiddle/)
-- [Linguagem C](https://www.programiz.com/c-programming)
+- Aplicação Express para disponibilizar diretório para o browser
+- Git
+- NodeJS
+- Python
+- CMake
+
+## emscripten (instalação)
+
+- Devidamente documentado em https://emscripten.org/docs/getting_started/downloads.html
+
+## Compilar
+
+- `emcc lib/demo.c -s WASM=1 -O3 -o demo.js`
+- `emcc lib/demo.c -s WASM=1 -O3 --pre-js antes.js -o demo.js`
+- `emcc lib/demo.c -s WASM=1 -O3 --post-js apos.js -o demo.js`
 
 ## Promt
 
-- Prepare o prompt (windows): `emsdk_env.bat`
+- Onde foi decidido para depositar o emscripten encontra-se `emsdk_env.bat` empregado para definir as variáveis de ambiente exigidas para acesso aos vários programas que fazem parte deste SDK.
 
 ## Alguns links
 

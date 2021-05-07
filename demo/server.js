@@ -1,5 +1,6 @@
 /**
  * Servidor de páginas estático.
+ * Empregado para disponibilizar exemplos.
  */
 
 const express = require("express");
