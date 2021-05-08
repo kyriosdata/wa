@@ -11,6 +11,10 @@
       function getNum() {
         return 1967;
       }
+
+      Module["onRuntimeInitialized"] = () => {
+        console.log("Quadrado de três", _quadrado(3));
+      };
     </script>
   </body>
 </html>
