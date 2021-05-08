@@ -2,7 +2,7 @@
 
 WebAssembly permite escrever módulos "rápidos", ou WASM, para ser executado em um navegador a partir de linguagens como C e C++, dentre outras. Ou seja, é uma busca por eficiência do código executado em um navegador.
 
-Neste processo é necessário criar tais módulos a partir de lingagens como Rust, C, C++ ou Kotlin, por exemplo, e permitir que código em um módulo em WebAssemly possa interagir com código em JavaScrit.
+Neste processo é necessário criar tais módulos a partir de lingagens como Rust, C, C++ ou Kotlin, por exemplo, permitir que este código seja chamado por código em JavaScript e, adicionalmente, permitir que código em um módulo em WebAssemly possa chamar código em JavaScrit.
 
 A interação entre código escrito em JavaScript e C é facilitada por
 ferramentas como [emscripten](https://emscripten.org/) que oferece
@@ -25,23 +25,46 @@ vários recursos tanto para o código em JavaScript quanto para o código em C.
 
 - Devidamente documentado em https://emscripten.org/docs/getting_started/downloads.html
 
+## Elementos básicos
+
+- É preciso uma página HTML que irá chamar o código JS e o módulo compilado (WASM).
+- Código em C (dentre outras opções) compilado em WASM.
+- Código JS que chama código em C (compilado em WASM).
+
 ## Compilar
 
 - `emcc lib/demo.c -s WASM=1 -O3 -o public/demo.html` (gera página, código em JS e WASM)
 - `emcc lib/demo.c -s WASM=1 -O3 -o public/demo.js` (exige que seja chamado por uma página HTML)
 - `emcc lib/demo.c -s WASM=1 -O3 --pre-js antes.js -o demo.js`
 - `emcc lib/demo.c -s WASM=1 -O3 --post-js apos.js -o demo.js`
-- `emcc lib/demo.c -s WASM=1 -s EXPORTED_FUNCTIONS="['_numero', '_main']" -O3 --post-js apos.js -o public\demo.js`
+- `emcc lib/demo.c -s WASM=1 -s EXPORTED_FUNCTIONS="['_numero', '_main']" -O3 --post-js apos.js -o public\demo.js` (JavaScript pode chamar as funções _\_numero()_ e _\_main()_)
 
 ## Promt
 
 - Onde foi decidido para depositar o emscripten encontra-se `emsdk_env.bat` empregado para definir as variáveis de ambiente exigidas para acesso aos vários programas que fazem parte deste SDK.
 
+## ccall (chamar código em C a partir de JavaScript)
+
+- `ccall("quadrado", "number", ["number"], [9])` (faz chamada à função **quadrado**, que retorna um número e recebe outro número como argumento, neste caso, o valor 9, ou seja, o retorno esperado é 81.)
+
+## Chamar código em JavaScript a partir de C
+
+Não é o cenário típico de uso.
+
+- Importe **emscripten.h**
+- Use `emscripten_run_script("console.log('mensagem...')");`
+
+- Usando chamada assíncrona
+- Use `emscripten_async_run_script("console.log('mensagem...')", 2000);`
+
+- Chamando função JavaScript que retorna um inteiro
+- Use `int valorInt = emscripten_run_script_int("getNum()");`
+
 ## Alguns links
 
 - [WebAssembly.instantiateStreaming()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/instantiateStreaming)
 
-## WebAssembly a partir de código em C
+## WebAssembly a partir de código em C (básico)
 
 - Todas as funções no código em C compilado em WASM tornam-se
   disponíveis para uso via código em JavaScript. Este código em C
