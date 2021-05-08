@@ -27,7 +27,8 @@ vários recursos tanto para o código em JavaScript quanto para o código em C.
 
 ## Compilar
 
-- `emcc lib/demo.c -s WASM=1 -O3 -o demo.js`
+- `emcc lib/demo.c -s WASM=1 -O3 -o public/demo.html` (gera página, código em JS e WASM)
+- `emcc lib/demo.c -s WASM=1 -O3 -o public/demo.js` (exige que seja chamado por uma página HTML)
 - `emcc lib/demo.c -s WASM=1 -O3 --pre-js antes.js -o demo.js`
 - `emcc lib/demo.c -s WASM=1 -O3 --post-js apos.js -o demo.js`
 - `emcc lib/demo.c -s WASM=1 -s EXPORTED_FUNCTIONS="['_numero', '_main']" -O3 --post-js apos.js -o public\demo.js`
