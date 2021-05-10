@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <title>WebAssembly Demo</title>
+    <style media="screen">
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script src="canvas.js"></script>
+    <script>
+      const canvas = document.getElementById("canvas");
+      const context = canvas.getContext("2d");
+
+      function atualizaDimensoesDoCanvas() {
+        context.canvas.width = window.innerWidth;
+        context.canvas.height = window.innerHeight;
+      }
+
+      // Define tamanho inicial do canvas
+      atualizaDimensoesDoCanvas();
+
+      // Canvas inicialmente do tamanho da window
+      window.onresize = atualizaDimensoesDoCanvas;
+
+      function desenhaCirculo(x, y, z, red, green, blue) {
+        context.beginPath();
+        context.arc(x, y, z, 0, 2 * Math.PI, false);
+        context.fillStyle = `rgb(${red},${green},${blue})`;
+        context.fill();
+      }
+
+      /**
+       * Função que desenha círculos após limpar canvas.
+       */
+      function atualizaCanvas(circulos, tamanho, totalItens) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < tamanho; i += totalItens) {
+          const circulo = circulos.slice(i, i + totalItens);
+          const [x, y, r, red, green, blue] = circulo;
+          desenhaCirculo(x, y, r, red, green, blue);
+        }
+      }
+
+      const start = () => {
+        // Inicia gerador de círculos (uma única vez)
+        _iniciar();
+
+        // Mantém em "cache" (JS) valores obtidos do gerador
+        const totalInts = _obterTamanho();
+        const totalItens = _obterTotalItens();
+
+        /**
+         * Função que cria ciclo infinito para constantemente
+         * desenhar círculos, em novas posições, criando uma
+         * animação.
+         */
+        const animacao = () => {
+          const offset = _atualizaPosicoes(canvas.width, canvas.height);
+
+          // RECUPERA VALORES PRODUZIDOS PELO CÓDIGO EM WASM (C)
+          // (código em JavaScript usa os valores retornados)
+          // O vetor retornado contém círculos, cada um representado por 6
+          // inteiros, na ordem x, y, r, red, green e blue, onde (x,y) é a
+          // posição do centro, r é o raio e os últimos três a cor.
+          const buffer = Module.HEAP32.buffer;
+          const circulos = new Int32Array(buffer, offset, totalInts);
+
+          atualizaCanvas(circulos, totalInts, totalItens);
+          window.requestAnimationFrame(animacao);
+        };
+
+        animacao();
+      };
+
+      Module["onRuntimeInitialized"] = start;
+    </script>
+  </body>
+</html>
