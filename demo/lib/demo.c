@@ -12,7 +12,7 @@ int buscaBinaria(char *palavras[], int tamanho, char *termo)
     while (bottom <= top)
     {
         mid = (bottom + top) / 2;
-        comparacao = strcmp(palavras[mid], target);
+        comparacao = strcmp(palavras[mid], termo);
         if (comparacao == 0)
         {
             return mid;

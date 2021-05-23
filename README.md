@@ -30,6 +30,12 @@ vários recursos tanto para o código em JavaScript quanto para o código em C.
 
 - Onde foi decidido para depositar o emscripten encontra-se `emsdk_env.bat` empregado para definir as variáveis de ambiente exigidas para acesso aos vários programas que fazem parte deste SDK.
 
+## Um fluxo possível
+
+- Crie código em C, com método main.
+- Compile com `emcc lib\demo.c -o demo.js`
+- Execute com `node demo.js`
+
 ## Elementos básicos
 
 - É preciso uma página HTML que irá chamar o código JS e o módulo compilado (WASM).

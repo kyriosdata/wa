@@ -17,7 +17,7 @@ var Module = typeof Module !== 'undefined' ? Module : {};
 
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
-
+// {{PRE_JSES}}
 
 // Sometimes an existing Module object exists with properties
 // meant to overwrite the default module functionality. Here
@@ -1761,11 +1761,6 @@ var ASM_CONSTS = {
       HEAPU8.copyWithin(dest, src, src + num);
     }
 
-  /** @suppress{checkTypes} */
-  function _emscripten_run_script_int(ptr) {
-      return eval(UTF8ToString(ptr))|0;
-    }
-
   function flush_NO_FILESYSTEM() {
       // flush anything remaining in the buffers during shutdown
       if (typeof _fflush !== 'undefined') _fflush(0);
@@ -1845,19 +1840,12 @@ function intArrayToString(array) {
 
 var asmLibraryArg = {
   "emscripten_memcpy_big": _emscripten_memcpy_big,
-  "emscripten_run_script_int": _emscripten_run_script_int,
   "fd_write": _fd_write,
   "setTempRet0": _setTempRet0
 };
 var asm = createWasm();
 /** @type {function(...*):?} */
 var ___wasm_call_ctors = Module["___wasm_call_ctors"] = createExportWrapper("__wasm_call_ctors");
-
-/** @type {function(...*):?} */
-var _numero = Module["_numero"] = createExportWrapper("numero");
-
-/** @type {function(...*):?} */
-var _quadrado = Module["_quadrado"] = createExportWrapper("quadrado");
 
 /** @type {function(...*):?} */
 var _main = Module["_main"] = createExportWrapper("main");
@@ -2333,6 +2321,4 @@ run();
 
 
 
-
-console.log("após");
 
