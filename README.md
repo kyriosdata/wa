@@ -24,6 +24,17 @@ vários recursos tanto para o código em JavaScript quanto para o código em C.
 ## emscripten (instalação)
 
 - Devidamente documentado em https://emscripten.org/docs/getting_started/downloads.html
+- Execute no diretório de instalação `emsdk_env.bat` ou correspondente para preparação de variáveis de ambiente empregadas.
+
+## Prompt
+
+- Onde foi decidido para depositar o emscripten encontra-se `emsdk_env.bat` empregado para definir as variáveis de ambiente exigidas para acesso aos vários programas que fazem parte deste SDK.
+
+## Um fluxo possível
+
+- Crie código em C, com método main.
+- Compile com `emcc lib\demo.c -o demo.js`
+- Execute com `node demo.js`
 
 ## Elementos básicos
 
@@ -38,10 +49,6 @@ vários recursos tanto para o código em JavaScript quanto para o código em C.
 - `emcc lib/demo.c -s WASM=1 -O3 --pre-js antes.js -o demo.js`
 - `emcc lib/demo.c -s WASM=1 -O3 --post-js apos.js -o demo.js`
 - `emcc lib/demo.c -s WASM=1 -s EXPORTED_FUNCTIONS="['_numero', '_main']" -O3 --post-js apos.js -o public\demo.js` (JavaScript pode chamar as funções _\_numero()_ e _\_main()_)
-
-## Promt
-
-- Onde foi decidido para depositar o emscripten encontra-se `emsdk_env.bat` empregado para definir as variáveis de ambiente exigidas para acesso aos vários programas que fazem parte deste SDK.
 
 ## ccall (chamar código em C a partir de JavaScript)
 
