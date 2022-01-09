@@ -2,44 +2,48 @@
 #include <string.h>
 #include <stdlib.h>
 
-int buscaBinaria(char *palavras[], int tamanho, char *termo)
+/**
+ * Realiza busca binária por termo no array fornecido.
+ * Retorna -1 se o termo não é encontrado em palavras.
+ */
+int encontre(char *palavras[], int tamanho, char *termo)
 {
-    int bottom = 0;
-    int mid;
-    int top = tamanho - 1;
+    int inicio = 0;
+    int fim = tamanho - 1;
+    int meio;
     int comparacao = 0;
 
-    while (bottom <= top)
+    while (inicio <= fim)
     {
-        mid = (bottom + top) / 2;
-        comparacao = strcmp(palavras[mid], termo);
+        meio = (inicio + fim) / 2;
+        comparacao = strcmp(termo, palavras[meio]);
         if (comparacao == 0)
         {
-            return mid;
+            return meio;
         }
 
-        if (comparacao > 0)
+        if (comparacao < 0)
         {
-            top = mid - 1;
+            fim = meio - 1;
         }
         else
         {
-            bottom = mid + 1;
+            inicio = meio + 1;
         }
     }
 
     return -1;
 }
 
+static char *palavroes[5] = {"do", "make", "shit", "talk", "walk"};
+
 int main(int argc, char *argv[])
 {
     int i = 1;
-    char *input = "talk";
+    char *entrada = "talk";
 
-    char *verbs[5] = {"do", "make", "shit", "talk", "walk"};
-
-    printf("looking at %s\n", input);
-    int index = buscaBinaria(verbs, 5, input);
+    printf("looking at %s\n", entrada);
+    int index = encontre(palavroes, 5, entrada);
     if (index < 0)
     {
         printf("Nao encontrado\n");

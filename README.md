@@ -1,10 +1,11 @@
 # wa
 
-WebAssembly permite escrever módulos "rápidos", ou WASM, para ser executado em um navegador a partir de linguagens como C e C++, dentre outras. Ou seja, é uma busca por eficiência do código executado em um navegador.
+WebAssembly permite criar módulo "rápido", ou módulo WASM, para ser executado em um navegador, a partir de código escrito em linguagens
+como C e C++, dentre outras. Ou seja, é uma busca por eficiência do código executado em um navegador.
 
-Neste processo é necessário criar tais módulos a partir de lingagens como Rust, C, C++ ou Kotlin, por exemplo, permitir que este código seja chamado por código em JavaScript e, adicionalmente, permitir que código em um módulo em WebAssemly possa chamar código em JavaScrit.
+Código fonte escrito Rust, C, C++ ou Kotlin pode ser chamado por código em JavaScript e, adicionalmente, permitir que código em um módulo em WebAssemly possa chamar código em JavaScrit.
 
-A interação entre código escrito em JavaScript e C é facilitada por
+A interação entre código escrito em JavaScript e C/c++ é facilitada por
 ferramentas como [emscripten](https://emscripten.org/) que oferece
 vários recursos tanto para o código em JavaScript quanto para o código em C.
 
